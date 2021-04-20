@@ -10,6 +10,17 @@ def set_fields(data):
 	os.system("sed -i -e '1s: Course:Course:g' " + data) 
 
 
+def read_previous_settings():
+	with open('settings.json', 'r') as openfile:
+		settings = json.load(openfile)
+		#print(settings['DataFolderName'])
+		return settings
+
+def write_settings(settings):
+	#settings = {"DataFolderName":'aaa',"SourceFileName":'bbb' }
+	with open('settings.json', 'w') as outfile:
+		json.dump(settings, outfile)
+
 def get_input_file():
 	
 	#settings = {}
