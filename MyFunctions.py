@@ -21,50 +21,14 @@ def write_settings(settings):
 	with open('settings.json', 'w') as outfile:
 		json.dump(settings, outfile)
 
-def get_input_file():
-	
-	#settings = {}
-	with open('settings.json', 'r') as openfile:
-		settings = json.loads(openfile)
-		print(settings)
-		
-	
-
-	DataFolderName = input("Enter Data folder   :") 	# + settings[1])
-	SourceFileName = input("Enter source filename   :")	# + settings[2])
-
-
-	SourceFileName = DataFolderName + '/' + SourceFileName
-	if SourceFileName.strip() == "/":
-		SourceFileName = "data.csv"
-		
-	#write settings to json file	
-	"""settings = {
-		'SourceFileName': SourceFileName,
-		'DataFolderName': DataFolderName
-				}
-	json_object = json.dumps(settings, indent=4)
-	with open('settings.json', 'w') as outfile:
-		json.dump(json_object, outfile)
-		#outfile.write(settings)
-
-
-
-	
-	#create tmp folder if not present
-	if not path.isdir(DataFolderName.strip() + '/tmp'):
-		os.system('mkdir ' +  DataFolderName.strip() + '/tmp')
-
-	"""
-	#add Exam Date and Session fields if not present
-	"""myfile = open(SourceFileName, "r")
+def add_examdate_and_session_if_not_present(SourceFileName):
+	myfile = open(SourceFileName, "r")
 	myline = myfile.readline()
 	if myline.find("Exam Date") == -1:
 		myline = myline + 'Exam Date, Session'
-	myfile.close()
-"""
-	
-	return SourceFileName		
+		myfile.close()	
+
+
 
 
 def extract_data_and_name_fields(data):

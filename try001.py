@@ -17,6 +17,16 @@ settings['SourceFileName'] = SourceFileName if SourceFileName != "" else  settin
 write_settings(settings)	
 
 
+#create tmp folder if not present
+if not path.isdir(DataFolderName.strip() + '/tmp'):
+	os.system('mkdir ' +  DataFolderName.strip() + '/tmp')
+
+FileName = DataFolderName + SourceFileName
+input(FileName)
+add_examdate_and_session_if_not_present(FileName)
+
+
+
 
 #get_input_file()	
 
