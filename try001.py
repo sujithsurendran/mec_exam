@@ -42,7 +42,7 @@ else:
 
 
 add_examdate_and_session_if_not_present(tmp_folder)
-
+sort_on_date(tmp_folder)
 
 
 
