@@ -2,6 +2,7 @@
 import os
 from os import path
 import json
+import csv
 
 
 def set_fields(data):
@@ -34,36 +35,50 @@ def add_examdate_and_session_if_not_present(tmp_folder):
 		os.system('echo "$(tail -n +2 ' + fileName + ')" >> ' + tmp_folder + '/2.csv')
 	else:
 		input('\n\n"' +tmp_folder + '/2.csv" ready with field names... \n')
-		
+		os.system('cp ' + tmp_folder + '/1.csv ' + tmp_folder + '/2.csv')
 		
 def sort_on_date(tmp_folder):
 	with open(tmp_folder + '/2.csv', "r") as csvFile, open(tmp_folder + '/3.csv',"w") as tmpFile:
 		csvReader = csv.DictReader(csvFile)
-		writer = csv.DictWriter(tmpFile, fieldnames = ["111Name","111RegNo","111Paper","111Slot","111ExamDate","111Session"]) 
+		writer = csv.DictWriter(tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"]) 
 		writer.writeheader()
 	    
 		for row in csvReader:
 			Name,RegNo=row["Student"].replace(")","").split("(")
+			correct_year_of_admission = False
+			AdmYear = RegNo[3:5]
+			for yr in (16,17,18,19,20,21,22,23,24,25,26):
+				if str(yr) == AdmYear:
+					correct_year_of_admission = True
+					break
+			if not correct_year_of_admission:
+				AdmYear = RegNo[4:6]
+			
 			Subject,Paper=row["Course"].replace(")","").split("(")
 			Slot = row["Slot"]
 			
 			#ExamDate = row["Exam Date"].right(2) + '/' + row["Exam Date"].
-			dd,mm,yy = row["Exam Date"].split('/')
-			ExamDate = yy + '/' + mm + '/' + dd
+			dd,mm,yy = row["Exam Date"].split('-')
+			ExamDate = yy + '-' + mm + '-' + dd
 			 
-			#Session = row["Session"]
-			Session = "FN"
+			Session = row["Session"]
 			
 			if(ExamDate.strip() == ""):
 				ExamDate = "xx/xx/xx"
 				Session = "xxx"
-			#writer.writerow({'111Name':Name,'111RegNo':RegNo,'111Paper':Paper,'111Slot':Slot,'111ExamDate':ExamDate,'111Session':Session})
-		writer.writerow({'111Slot':Slot,'111ExamDate':ExamDate,'111Session':Session,'111Paper':Paper,'111RegNo':RegNo,'111Name':Name})
+			writer.writerow({
+				'111Slot':Slot,
+				'111ExamDate':ExamDate,
+				'111Session':Session,
+				'111Paper':Paper,
+				'111AdmYear':AdmYear,
+				'111RegNo':RegNo,
+				'111Name':Name})
 		    
-#sort_key = "-k5,5 -k6,6 -k7,7 -k4,4 -k3,3"    #Slot, Date, Session, Paper, RegNo
-sort_key = "-k1,6 "    #Slot, Date, Session, Paper, RegNo
-#os.system('sort ' + tmp_folder + '/3.csv' + ' -t "," ' + sort_key + ' > ' + tmp_folder + '/3.csv')
-input('sort ' + tmp_folder + '/3.csv' + ' -t "," ' + sort_key + ' > ' + tmp_folder + '/3.csv')
+	#sort_key = "-k5,5 -k6,6 -k7,7 -k4,4 -k3,3"    #Slot, Date, Session, Paper, RegNo
+	sort_key = "-k1,6 "    #Slot, Date, Session, Paper, RegNo
+	#os.system('sort ' + tmp_folder + '/3.csv' + ' -t "," ' + sort_key + ' > ' + tmp_folder + '/3.csv')
+	os.system('sort ' + tmp_folder + '/3.csv' + ' -t "," ' + sort_key + ' > ' + tmp_folder + '/4.csv')
 
 
 """
