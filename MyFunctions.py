@@ -121,14 +121,17 @@ def set_record_date(tmp_folder):
 	fileName_1 = tmp_folder + '/5.csv'
 	fileName_2 = tmp_folder + '/6.csv'
 	#fileName_3 = tmp_folder + '/7.csv'
-
+	timeTable = tmp_folder + '/timeTable.csv'
 
 	first_time = True
-	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile:
+	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile, open(timeTable,'w') as timeTable:
 		csvReader = csv.DictReader(csvFile)
-		writer = csv.DictWriter(tmpFile, fieldnames = ["111Name","111RegNo","111Paper","111Slot","111ExamDate","111Session"]) 
+
+		writer = csv.DictWriter( tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"] )
+		timeTableWriter = csv.DictWriter( timeTable, fieldnames = ["111Slot","111ExamDate","111Session","111Paper"] )
+		
 		writer.writeheader()
-	    
+		timeTableWriter.writeheader()
 	    
 		for row in csvReader:
 			Name = (row["111Name"].strip()).title()
@@ -137,6 +140,7 @@ def set_record_date(tmp_folder):
 			Slot = (row["111Slot"].upper()).strip()
 			ExamDate =  (row["111ExamDate"]).strip()
 			AdmYear = row["111AdmYear"]
+			Session = row["111Session"]
 			if first_time == True:
 				first_time = False
 
@@ -155,12 +159,19 @@ def set_record_date(tmp_folder):
 
 				# if dd/mm is entered, make complete date dd/mm/yyyy
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
-			    
-
-				#by default session is FORENOON otherwise a for AFTERNOON and f for FORENOON
-				ExamSession = "Forenoon" if ExamSession == '' else ExamSession
-				ExamSession = "Afternoon" if ExamSession.upper() == 'A' else ExamSession
-				ExamSession = "Forenoon" if ExamSession.upper() == 'F' else ExamSession			
+				NewExamDate = ExamDate
+				NewExamSession = ExamSession
+				#by default session is FORENOON otherwise 'a' for AFTERNOON and 'f' for FORENOON
+				if NewExamSession == "":
+					NewExamSession = "Forenoon"
+				elif NewExamSession.upper() == "A":
+					NewExamSession = "Afternoon"
+				elif NewExamSession.upper() == "F":
+					NewExamSession = "Forenoon"
+				else:
+					NewExamSession = "Forenoon"
+				timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
+		
 			    
 			if tmp_paper != Paper:	  
 
@@ -168,25 +179,34 @@ def set_record_date(tmp_folder):
 				tmp_paper = Paper
 				tmp_date = ExamDate
 
-				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
-				ExamSession = input("Enter Exam Session :Forenoon? ")
+				NewExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
+				NewExamSession = input("Enter Exam Session :Forenoon? ")
 
 				ExamDate = tmp_date if ExamDate == '' else ExamDate
 				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
 
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
-				ExamSession = "Forenoon" if ExamSession == '' else ExamSession
-				ExamSession = "Afternoon" if ExamSession == 'a' else ExamSession
-				ExamSession = "Forenoon" if ExamSession == 'f' else ExamSession			
+				if NewExamSession == "":
+					NewExamSession = "Forenoon"
+				elif NewExamSession.upper() == "A":
+					NewExamSession = "Afternoon"
+				elif NewExamSession.upper() == "F":
+					NewExamSession = "Forenoon"
+				else:
+					NewExamSession = "Forenoon"		
+					
+				timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
+
 
 			FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]
+			
+			"""if ExamDate != NewExamDate:
+				writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
+			else:
+				writer.writerow({'111Slot':Slot, '111ExamDate':ExamDate, '111Session':ExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})"""
 
-			writer.writerow({'111Slot':Slot, '111ExamDate':FormattedExamDate, '111Session':ExamSession, '111Paper':Paper, '111RegNo':RegNo, '111Name':Name})
 
-
-
-
-
+			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 
 
 """
