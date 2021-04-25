@@ -40,14 +40,14 @@ else:
 		os.system('cp ' +  FileName + ' ' + working_file_001)
 
 
+set_fields(tmp_folder)
 
-add_examdate_and_session_if_not_present(tmp_folder)
+#add_examdate_and_session_if_not_present(tmp_folder)
 sort_on_date(tmp_folder)
-
-
+set_record_date(tmp_folder)
+print("Completed...!")
 
 #get_input_file()	
 
-#set_fields(data)
 
 
