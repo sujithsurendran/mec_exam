@@ -20,34 +20,58 @@ DataFolderName = settings['DataFolderName']
 SourceFileName = settings['SourceFileName']
 ExamName = settings['ExamName']
 
-write_settings(settings)	
 tmp_folder = DataFolderName.strip() + '/tmp_' + ExamName.replace(' ','_')
-#create tmp folder if not present
-if not path.isdir(tmp_folder):
-	os.system('mkdir ' +  tmp_folder)
 
-FileName = DataFolderName + "/" + SourceFileName
-working_file_001 = tmp_folder + '/1.csv'
 
-if not path.isfile(working_file_001):
-	os.system('cp ' +  FileName + ' ' + working_file_001)
+
+timeTableFileName = tmp_folder + '/timeTable.csv'
+DatedFileName = tmp_folder + '/6.csv'
+
+overWrite = True
+if path.isfile(timeTableFileName) and path.isfile(DatedFileName):
+	input("Found.. ")	
+	os.system('cat ' + timeTableFileName)
+	choice = input("Overwrite this Timetable ? ")
+	if choice.upper() == 'Y':
+		overWrite = True
+	elif choice.upper() == "N":
+		overWrite = False
 else:
-	choice = input("Overwrite " + working_file_001 + ' ?(Y/n)')
-	if choice == 'n':
-		#Do nothing
-		i=0
-	else:
+	input("Else3.. ")	
+
+
+if overWrite:
+
+	write_settings(settings)	
+	#create tmp folder if not present
+	if not path.isdir(tmp_folder):
+		os.system('mkdir ' +  tmp_folder)
+
+	FileName = DataFolderName + "/" + SourceFileName
+	working_file_001 = tmp_folder + '/1.csv'
+
+	if not path.isfile(working_file_001):
 		os.system('cp ' +  FileName + ' ' + working_file_001)
+	else:
+		choice = input("Overwrite " + working_file_001 + ' ?(Y/n)')
+		if choice == 'n':
+			#Do nothing
+			i=0
+		else:
+			os.system('cp ' +  FileName + ' ' + working_file_001)
 
 
-set_fields(tmp_folder)
+	set_fields(tmp_folder)
+	sort_on_date(tmp_folder)
+	set_record_date(tmp_folder, '/5.csv', '/6.csv')
+	
+	print("Completed...!")
+	
+else:
+	print("Retaining the existing file...\n\n")
+	set_record_date(tmp_folder, '/6.csv', '/7.csv')
+	print("Completed...!")
 
-#add_examdate_and_session_if_not_present(tmp_folder)
-sort_on_date(tmp_folder)
-set_record_date(tmp_folder)
-print("Completed...!")
-
-#get_input_file()	
 
 
 

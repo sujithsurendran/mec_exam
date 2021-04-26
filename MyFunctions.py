@@ -116,10 +116,10 @@ def sort_on_date(tmp_folder):
 
 
 
-def set_record_date(tmp_folder):
-
-	fileName_1 = tmp_folder + '/5.csv'
-	fileName_2 = tmp_folder + '/6.csv'
+def set_record_date(tmp_folder, fileName_1, fileName_2):
+	input("test")
+	fileName_1 = tmp_folder + fileName_1
+	fileName_2 = tmp_folder + fileName_2
 	#fileName_3 = tmp_folder + '/7.csv'
 	timeTable = tmp_folder + '/timeTable.csv'
 
@@ -200,34 +200,14 @@ def set_record_date(tmp_folder):
 
 			FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]
 			
-			"""if ExamDate != NewExamDate:
-				writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
-			else:
-				writer.writerow({'111Slot':Slot, '111ExamDate':ExamDate, '111Session':ExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})"""
-
 
 			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 
 
+
 """
 
-
-
 def extract_data_and_name_fields(data):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
