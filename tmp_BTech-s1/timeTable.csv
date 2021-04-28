@@ -1,10 +1,10 @@
-111Slot,111ExamDate,111Session,111Paper
-A,24/04/21,Forenoon,MAT101
-B,,Forenoon,CYT100
-B,,Forenoon,PHT100
-B,,Forenoon,PHT110
-C,,Forenoon,EST100
-C,,Forenoon,EST110
-D,,Forenoon,EST120
-D,,Forenoon,EST130
-E,,Forenoon,HUN101
+      1 111Slot-111ExamDate-111Session-111Paper
+    478 A-01/04/21-FN-MAT101
+    251 B-02/04/21-AN-CYT100
+    203 B-03/04/21-FN-PHT100
+     17 B-04/04/21-AN-PHT110
+    275 C-05/04/21-FN-EST100
+    203 C-06/04/21-AN-EST110
+    211 D-07/04/21-FN-EST120
+    262 D-08/04/21-AN-EST130
+    463 E-09/04/21-FN-HUN101

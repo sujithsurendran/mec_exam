@@ -117,7 +117,7 @@ def sort_on_date(tmp_folder):
 
 
 def set_record_date(tmp_folder, fileName_1, fileName_2):
-	input("test")
+
 	fileName_1 = tmp_folder + fileName_1
 	fileName_2 = tmp_folder + fileName_2
 	#fileName_3 = tmp_folder + '/7.csv'
@@ -128,10 +128,10 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 		csvReader = csv.DictReader(csvFile)
 
 		writer = csv.DictWriter( tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"] )
-		timeTableWriter = csv.DictWriter( timeTable, fieldnames = ["111Slot","111ExamDate","111Session","111Paper"] )
+		#timeTableWriter = csv.DictWriter( timeTable, fieldnames = ["111Slot","111ExamDate","111Session","111Paper"] )
 		
 		writer.writeheader()
-		timeTableWriter.writeheader()
+		#timeTableWriter.writeheader()
 	    
 		for row in csvReader:
 			Name = (row["111Name"].strip()).title()
@@ -140,6 +140,9 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 			Slot = (row["111Slot"].upper()).strip()
 			ExamDate =  (row["111ExamDate"]).strip()
 			AdmYear = row["111AdmYear"]
+			
+			Branch = RegNo.find(AdmYear)
+			
 			Session = row["111Session"]
 			if first_time == True:
 				first_time = False
@@ -163,16 +166,18 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 				NewExamSession = ExamSession
 				#by default session is FORENOON otherwise 'a' for AFTERNOON and 'f' for FORENOON
 				if NewExamSession == "":
-					NewExamSession = "Forenoon"
-				elif NewExamSession.upper() == "A":
-					NewExamSession = "Afternoon"
-				elif NewExamSession.upper() == "F":
-					NewExamSession = "Forenoon"
-				else:
-					NewExamSession = "Forenoon"
-				timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "A" or NewExamSession.upper() == "AN":
+					NewExamSession = "AN"
+				elif NewExamSession.upper() == "F" or NewExamSession.upper() == "FN":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "FORENOON":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "AFTERNOON":
+					NewExamSession = "AN"
+				#timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
 		
-			    
+			 	#RegNo[RegNo.find(AdmYear)+2:RegNo.find(AdmYear)+4]   
 			if tmp_paper != Paper:	  
 
 				#tmp_slot = Slot
@@ -187,23 +192,23 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
 				if NewExamSession == "":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "A" or NewExamSession.upper() == "AN":
+					NewExamSession = "AN"
+				elif NewExamSession.upper() == "F" or NewExamSession.upper() == "FN":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "FN":
 					NewExamSession = "Forenoon"
-				elif NewExamSession.upper() == "A":
-					NewExamSession = "Afternoon"
-				elif NewExamSession.upper() == "F":
-					NewExamSession = "Forenoon"
-				else:
-					NewExamSession = "Forenoon"		
+				elif NewExamSession.upper() == "AN":
+					NewExamSession = "AN"	
 					
-				timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
+				#timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
 
-
-			FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]
-			
+			#FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]			
 
 			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
-
-
+	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
+	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
 
 """
 

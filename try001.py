@@ -29,7 +29,6 @@ DatedFileName = tmp_folder + '/6.csv'
 
 overWrite = True
 if path.isfile(timeTableFileName) and path.isfile(DatedFileName):
-	input("Found.. ")	
 	os.system('cat ' + timeTableFileName)
 	choice = input("Overwrite this Timetable ? ")
 	if choice.upper() == 'Y':
@@ -37,7 +36,7 @@ if path.isfile(timeTableFileName) and path.isfile(DatedFileName):
 	elif choice.upper() == "N":
 		overWrite = False
 else:
-	input("Else3.. ")	
+	input("Timetable not available, Press Enter to continue..")	
 
 
 if overWrite:
@@ -69,7 +68,7 @@ if overWrite:
 	
 else:
 	print("Retaining the existing file...\n\n")
-	set_record_date(tmp_folder, '/6.csv', '/7.csv')
+	set_record_date(tmp_folder, '/6.csv', '/7.withRevicedExamDate.csv')
 	print("Completed...!")
 
 
