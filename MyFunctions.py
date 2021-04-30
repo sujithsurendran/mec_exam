@@ -183,9 +183,10 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 				#tmp_slot = Slot
 				tmp_paper = Paper
 				tmp_date = ExamDate
+				tmp_session = Session
 
 				NewExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
-				NewExamSession = input("Enter Exam Session :Forenoon? ")
+				NewExamSession = input("Enter Exam Session " + tmp_session + ':? ')
 
 				ExamDate = tmp_date if ExamDate == '' else ExamDate
 				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
@@ -209,6 +210,19 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
 	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
+
+
+def change_date(tmp_folder,source_file):
+	timeTable = tmp_folder + '/' + source_file
+	 
+	timeTablecsv = open(timeTable,"r")
+	for exam_record in timeTablecsv:
+		newDate = input("Change " + exam_record[2:] + ' to => :?')
+	
+	timeTablecsv.close()
+	
+
+
 
 """
 
