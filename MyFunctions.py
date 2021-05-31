@@ -185,7 +185,30 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 
 				#input("Paper change" + "next record : ExamDate = " + ExamDate + ", tmp_date = " + tmp_date)
 				tmp_paper = Paper
+<<<<<<< HEAD
 
+=======
+				tmp_date = ExamDate
+				tmp_session = Session
+
+				NewExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
+				NewExamSession = input("Enter Exam Session " + tmp_session + ':? ')
+
+				ExamDate = tmp_date if ExamDate == '' else ExamDate
+				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
+
+				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
+				if NewExamSession == "":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "A" or NewExamSession.upper() == "AN":
+					NewExamSession = "AN"
+				elif NewExamSession.upper() == "F" or NewExamSession.upper() == "FN":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "FN":
+					NewExamSession = "Forenoon"
+				elif NewExamSession.upper() == "AN":
+					NewExamSession = "AN"	
+>>>>>>> 977b6db46a42f95fac400638ea7208561cfc88b2
 					
 
 				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
@@ -205,6 +228,7 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 			writer.writerow({'111Slot':Slot, '111ExamDate':ExamDate, '111Session':ExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
 	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
+<<<<<<< HEAD
 	
 	
 def format_session(NewExamSession):
@@ -232,3 +256,59 @@ def format_exam_date(dt="", prev_dt=datetime.datetime.now().strftime("%d/%m/%y")
 	dt = dt + prev_dt[-3:] if len(str(dt)) == 5 else dt
 	return dt
 	
+=======
+
+
+def change_date(tmp_folder,source_file):
+	timeTable = tmp_folder + '/' + source_file
+	 
+	timeTablecsv = open(timeTable,"r")
+	for exam_record in timeTablecsv:
+		newDate = input("Change " + exam_record[2:] + ' to => :?')
+	
+	timeTablecsv.close()
+	
+
+
+
+"""
+
+def extract_data_and_name_fields(data):
+
+
+
+# -------------- - --------------
+def fetch_fields_and_rename_cols(data):
+    
+	#os.system("sed -i -e '1s: ::g' " + data) #fix the error of left spaces in "     Course" field
+	os.system("sed -i -e '1s: 	Course:Course:g' " + data) #fix the error of left spaces in "     Course" field
+
+	#kkkk=input("This is th eone " + data)
+	with open(data, "r") as csvFile, open("tmp/tmp-001.csv","w") as tmpFile:
+		csvReader = csv.DictReader(csvFile)
+		writer = csv.DictWriter(tmpFile, fieldnames = ["111Name","111RegNo","111Paper","111Slot","111ExamDate","111Session"]) 
+		writer.writeheader()
+	    
+		for row in csvReader:
+			#k = input(row["Course"])
+			Name,RegNo=row["Student"].replace(")","").split("(")
+			Subject,Paper=row["Course"].replace(")","").split("(")
+			Slot = row["Slot"]
+			
+			#ExamDate = row["Exam Date"]
+			ExamDate = "15/04/2021"
+			 
+			#Session = row["Session"]
+			Session = "FN"
+			
+			if(ExamDate.strip() == ""):
+				ExamDate = "xx-xx-xxxx"
+				Session = "xxx"
+			writer.writerow({'111Name':Name,'111RegNo':RegNo,'111Paper':Paper,'111Slot':Slot,'111ExamDate':ExamDate,'111Session':Session})
+			#writer.writerow({'111Name':Name,'111RegNo':RegNo,'111Paper':Paper,'111Slot':Slot})
+		    
+		sort_key = "-k5,5 -k6,6 -k7,7 -k4,4 -k3,3"    #Slot, Date, Session, Paper, RegNo
+		print('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
+		os.system('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
+		"""
+>>>>>>> 977b6db46a42f95fac400638ea7208561cfc88b2
