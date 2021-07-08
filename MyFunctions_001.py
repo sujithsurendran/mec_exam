@@ -174,28 +174,20 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 				NewExamSession = ExamSession
 				#by default session is FORENOON otherwise 'a' for AFTERNOON and 'f' for FORENOON
 
-				NewExamSession = format_session(NewExamSession)
+				ExamSession = format_session(NewExamSession)
 
  
 			if tmp_paper != Paper:	  
 
 				#tmp_slot = Slot
-				tmp_paper = Paper
-				tmp_date = ExamDate
-				tmp_session = Session
-
-				NewExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
-				NewExamSession = input("Enter Exam Session " + tmp_session + ':? ')
+				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + ExamDate + " - ? "))
+				ExamSession = input("Enter Exam Session " + ExamSession + ':? ')
 
 				ExamDate = tmp_date if ExamDate == '' else ExamDate
 				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
 
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
-				NewExamSession = format_session(NewExamSession)
-					
-				#timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
-
-			#FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]			
+				ExamSession = format_session(ExamSession)		
 
 			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
