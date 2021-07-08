@@ -3,48 +3,51 @@ import os
 from os import path
 import json
 import csv
+import datetime
 
-
-def set_fields(tmp_folder):
+def set_fields(tmp_folder, copy_of_source_file):
 
 
 	# Remove First row if unwanted
 	#
-	fileName_1 = tmp_folder + '/1.csv'
-	fileName_2 = tmp_folder + '/2.csv'
-	os.system('rm -rf ' + fileName_2)
-	myfile = open(fileName_1, "r")
+
+	heading_removed_file = tmp_folder + '/heading_removed_file.csv'
+	os.system('rm -rf ' + heading_removed_file)
+	myfile = open(copy_of_source_file, "r")
 	FirstLine = myfile.readline()
 	if FirstLine.find("Appearing Student") >= 0:
 		myfile.close()
 
-		os.system('echo "$(tail -n +2 ' + fileName_1 + ')" >> ' + fileName_2)
+		os.system('echo "$(tail -n +2 ' + copy_of_source_file + ')" >> ' + heading_removed_file)
 	else:
-		os.system('cp ' + fileName_1 + ' ' + fileName_2 )
+		os.system('cp ' + copy_of_source_file + ' ' + heading_removed_file )
 
 
 
 	# Add Exam Date field if not present
 	#
-	fileName_1 = tmp_folder + '/2.csv'
-	fileName_2 = tmp_folder + '/3.csv'
-	myfile = open(fileName_1, "r")
+	#fileName_1 = tmp_folder + '/2.csv'
+	ExamDateAndSessionAdded = tmp_folder + '/exam_date_and_session_added.csv'
+	
+	
+	
+	myfile = open(heading_removed_file, "r")
 	FirstLine = myfile.readline()
 	if FirstLine.find("Exam Date") == -1:		# if Exam Date is not present, add Exam Date
 		ReplacementLine = FirstLine.rstrip('\n') + ',Exam Date,Session'
 		myfile.close()
 
-		os.system('echo "' + ReplacementLine + '">' + fileName_2 )
-		os.system('echo "$(tail -n +2 ' + fileName_1 + ')" >> ' + fileName_2 )
+		os.system('echo "' + ReplacementLine + '">' + ExamDateAndSessionAdded )
+		os.system('echo "$(tail -n +2 ' + heading_removed_file + ')" >> ' + ExamDateAndSessionAdded )
 	else:
-		os.system('cp ' + fileName_1 + ' ' + fileName_2 )
+		os.system('cp ' + heading_removed_file + ' ' + ExamDateAndSessionAdded )
 
 		
 
 	#fix the error of left spaces in "     Course" field
 	#
-	os.system("sed -i -e '1s: 	Course:Course:g' " + fileName_2) 
-	os.system("sed -i -e '1s: Course:Course:g' " + fileName_2) 
+	os.system("sed -i -e '1s: 	Course:Course:g' " + ExamDateAndSessionAdded) 
+	os.system("sed -i -e '1s: Course:Course:g' " + ExamDateAndSessionAdded) 
 
 
 
@@ -68,10 +71,11 @@ def sort_on_date(tmp_folder):
 	#sort on date if available else stuff xx-xx-xx
 
 	fileName_1 = tmp_folder + '/3.csv'
+	exam_date_and_session_added_file = tmp_folder + '/exam_date_and_session_added.csv' 
 	fileName_2 = tmp_folder + '/4.csv'
 	fileName_3 = tmp_folder + '/5.csv'
 
-	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile:
+	with open(exam_date_and_session_added_file, "r") as csvFile, open(fileName_2,"w") as tmpFile:
 		csvReader = csv.DictReader(csvFile)
 		writer = csv.DictWriter(tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"]) 
 		writer.writeheader()
@@ -131,6 +135,12 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 	timeTable = tmp_folder + '/timeTable.csv'
 
 	first_time = True
+
+	tmp_date = ""
+	tmp_session = ""
+
+
+
 	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile, open(timeTable,'w') as timeTable:
 		csvReader = csv.DictReader(csvFile)
 
@@ -139,6 +149,7 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 		
 		writer.writeheader()
 		#timeTableWriter.writeheader()
+		
 	    
 		for row in csvReader:
 			Name = (row["111Name"].strip()).title()
@@ -149,25 +160,38 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 			  
 			AdmYear = row["111AdmYear"]
 			
-			Branch = RegNo.find(AdmYear)
-			
+			pos = RegNo.find(AdmYear) + 2
+			Branch = RegNo[pos:pos+2]
+			Paper = Branch + '-' + Paper
 			Session = row["111Session"]
+<<<<<<< HEAD
 
 			if first_time == True:
 			
 				first_time = False
+=======
+>>>>>>> b449501e04f13bf2ae7336c71f2eaaa4fcc1e4fa
 
-				#tmp_slot = Slot
-				tmp_paper = Paper
 
+<<<<<<< HEAD
 
 				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + ExamDate + " - ? "))
+=======
+			if ExamDate == "xx/xx/xx" or ExamDate == "":
+				tmp_date = ExamDate
+			else:
+				i=0
+				
+			if Session.upper() != "XX":
+				tmp_session = Session
+>>>>>>> b449501e04f13bf2ae7336c71f2eaaa4fcc1e4fa
 
 				ExamSession = input("Enter Exam Session :Forenoon? ")
 
-				#   if  dd of dd/mm/yy is entered make complete dd/mm/yyyy			
-				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
+			if first_time == True:
+				first_time = False
 
+<<<<<<< HEAD
 				# if dd/mm is entered, make complete date dd/mm/yyyy
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
 				NewExamDate = ExamDate
@@ -177,10 +201,26 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 				NewExamSession = format_session(NewExamSession)
 
  
-			if tmp_paper != Paper:	  
-
+=======
 				#tmp_slot = Slot
 				tmp_paper = Paper
+				
+				ExamDate = str(input("first time => Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + ExamDate + " - ? "))
+				ExamSession = input("Enter Exam Session :" + Session + "? ")
+				ExamDate = format_exam_date(ExamDate)
+				ExamSession = format_session(ExamSession)
+				
+		
+
+			#input("next record : ExamDate = " + ExamDate + ", tmp_date = " + tmp_date)
+>>>>>>> b449501e04f13bf2ae7336c71f2eaaa4fcc1e4fa
+			if tmp_paper != Paper:	  
+
+				#input("Paper change" + "next record : ExamDate = " + ExamDate + ", tmp_date = " + tmp_date)
+				tmp_paper = Paper
+<<<<<<< HEAD
+
+=======
 				tmp_date = ExamDate
 				tmp_session = Session
 
@@ -191,15 +231,69 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 				ExamDate = (f'{int(ExamDate):02}') + tmp_date[-8:]  if len(str(ExamDate)) <= 2 else ExamDate
 
 				ExamDate = ExamDate + tmp_date[-5:] if len(str(ExamDate)) == 5 else ExamDate
+<<<<<<< HEAD
 				NewExamSession = format_session(NewExamSession)
+=======
+				if NewExamSession == "":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "A" or NewExamSession.upper() == "AN":
+					NewExamSession = "AN"
+				elif NewExamSession.upper() == "F" or NewExamSession.upper() == "FN":
+					NewExamSession = "FN"
+				elif NewExamSession.upper() == "FN":
+					NewExamSession = "Forenoon"
+				elif NewExamSession.upper() == "AN":
+					NewExamSession = "AN"	
+>>>>>>> 977b6db46a42f95fac400638ea7208561cfc88b2
+>>>>>>> b449501e04f13bf2ae7336c71f2eaaa4fcc1e4fa
 					
-				#timeTableWriter.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper})
 
-			#FormattedExamDate=ExamDate[-2:] + "/" + ExamDate[3:5] + "/" + ExamDate[:2]			
+				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + tmp_date + " - ? "))
+				ExamSession = input("Enter Exam Session :" +  tmp_session + "? ")
+				
+				if ExamDate == "":
+					ExamDate = tmp_date
+					
+				if ExamSession == "":
+					ExamSession = tmp_session
 
-			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
+				ExamDate = format_exam_date(ExamDate)
+				ExamSession = format_session(ExamSession)	
+					
+		
+
+			writer.writerow({'111Slot':Slot, '111ExamDate':ExamDate, '111Session':ExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
 	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
+<<<<<<< HEAD
+	
+	
+def format_session(NewExamSession):
+	if NewExamSession == "":
+		NewExamSession = "FN"
+	elif NewExamSession.upper() == "A" or NewExamSession.upper() == "AN":
+		NewExamSession = "AN"
+	elif NewExamSession.upper() == "F" or NewExamSession.upper() == "FN":
+		NewExamSession = "FN"
+	elif NewExamSession.upper() == "FORENOON":
+		NewExamSession = "FN"
+	elif NewExamSession.upper() == "AFTERNOON":
+		NewExamSession = "AN"
+	return NewExamSession
+	
+def format_exam_date(dt="", prev_dt=datetime.datetime.now().strftime("%d/%m/%y")):
+
+	if dt == "":
+		dt = prev_dt
+
+	#   if  dd of dd/mm/yy is entered make complete dd/mm/yyyy			
+	dt = (f'{int(dt):06}') + prev_dt[-6:]  if len(str(dt)) <= 2 else dt
+
+	# if dd/mm is entered, make complete date dd/mm/yyyy
+	dt = dt + prev_dt[-3:] if len(str(dt)) == 5 else dt
+	return dt
+	
+=======
 
 
 def change_date(tmp_folder,source_file):
@@ -266,3 +360,4 @@ def fetch_fields_and_rename_cols(data):
 		print('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
 		os.system('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
 		"""
+>>>>>>> 977b6db46a42f95fac400638ea7208561cfc88b2

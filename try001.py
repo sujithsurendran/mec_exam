@@ -47,20 +47,20 @@ if overWrite:
 		os.system('mkdir ' +  tmp_folder)
 
 	FileName = DataFolderName + "/" + SourceFileName
-	working_file_001 = tmp_folder + '/1.csv'
+	copy_of_source_file = tmp_folder + '/copy_of_source_file.csv'
 
-	if not path.isfile(working_file_001):
-		os.system('cp ' +  FileName + ' ' + working_file_001)
+	if not path.isfile(copy_of_source_file):
+		os.system('cp ' +  FileName + ' ' + copy_of_source_file)
 	else:
-		choice = input("Overwrite " + working_file_001 + ' ?(Y/n)')
+		choice = input("Overwrite  " + copy_of_source_file + ' and start afresh ?(Y/n)')
 		if choice == 'n':
 			#Do nothing
 			i=0
 		else:
-			os.system('cp ' +  FileName + ' ' + working_file_001)
+			os.system('cp ' +  FileName + ' ' + copy_of_source_file)
 
 
-	set_fields(tmp_folder)
+	set_fields(tmp_folder, copy_of_source_file)
 	sort_on_date(tmp_folder)
 	set_record_date(tmp_folder, '/5.csv', '/6.csv')
 	
