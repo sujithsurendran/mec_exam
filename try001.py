@@ -14,7 +14,8 @@ ExamName = input("Enter ExamName :" + settings['ExamName'] + "?")
 
 settings['DataFolderName'] = DataFolderName if DataFolderName != "" else  settings['DataFolderName']
 settings['SourceFileName'] = SourceFileName if SourceFileName != "" else  settings['SourceFileName']
-settings['ExamName'] = SourceFileName if ExamName != "" else  settings['ExamName']
+#settings['ExamName'] = SourceFileName if ExamName != "" else  settings['ExamName']
+settings['ExamName'] = ExamName if ExamName != "" else  settings['ExamName']
 
 DataFolderName = settings['DataFolderName']
 SourceFileName = settings['SourceFileName']

@@ -5,12 +5,19 @@ import json
 import csv
 
 
-def set_fields(tmp_folder):
+def set_fields(tmp_folder, copy_of_source_file):
+	""" 
+		Remove merged first line
+		Add Exam Date Field
+		Remove space before Course
 
+	"""
 
 	# Remove First row if unwanted
 	#
-	fileName_1 = tmp_folder + '/1.csv'
+	#fileName_1 = tmp_folder + '/1.csv'
+	fileName_1 = copy_of_source_file
+	
 	fileName_2 = tmp_folder + '/2.csv'
 	os.system('rm -rf ' + fileName_2)
 	myfile = open(fileName_1, "r")
@@ -69,11 +76,11 @@ def sort_on_date(tmp_folder):
 
 	fileName_1 = tmp_folder + '/3.csv'
 	fileName_2 = tmp_folder + '/4.csv'
-	fileName_3 = tmp_folder + '/5.csv'
+	fileName_3 = tmp_folder + '/5_sorted.csv'
 
 	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile:
 		csvReader = csv.DictReader(csvFile)
-		writer = csv.DictWriter(tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"]) 
+		writer = csv.DictWriter(tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111Branch","111RegNo","111Name"]) 
 		writer.writeheader()
 	    
 	    
@@ -95,9 +102,18 @@ def sort_on_date(tmp_folder):
 				AdmYear = RegNo[4:6]
 				
 			# 3. Extract Paper Code
-			Subject,Paper=row["Course"].replace(")","").split("(")
-			Slot = row["Slot"]
 			
+			try:
+				Subject,Paper=row["Course"].replace(")","").split("(")
+			except ValueError:
+				Subject,SubjectSpec,Paper=row["Course"].replace(")","").split("(")
+				Subject = Subject + "[" + SubjectSpec + "]"
+			except:
+				print("Error in record of : '" + Name + ", Regno: " + RegNo + " .. " +  +". Please correct it to continue.\n " )
+				exit()
+				
+			Slot = row["Slot"]
+				
 			# 4. Change date format to YYMMDD for sorting
 			if len(row["Exam Date"].split('-')) == 3:
 				dd,mm,yy = row["Exam Date"].split('-')
@@ -107,6 +123,8 @@ def sort_on_date(tmp_folder):
 				ExamDate = "xx/xx/xx"
 				Session = "XX"			
 			
+			Branch = row["Branch Name"]
+			
 			
 			writer.writerow({
 				'111Slot':Slot,
@@ -114,11 +132,12 @@ def sort_on_date(tmp_folder):
 				'111Session':Session,
 				'111Paper':Paper,
 				'111AdmYear':AdmYear,
+				'111Branch':Branch,
 				'111RegNo':RegNo,
 				'111Name':Name.title()})
 		    
-	sort_key = "-k1,6 "    #Slot, Date, Session, Paper, RegNo
-	os.system('sort ' + fileName_2 + ' -t "," ' + sort_key + ' > ' + fileName_3)		#5.csv generated
+	sort_key = "-k1,7 "    #Slot, Date, Session, Paper, RegNo
+	os.system('sort ' + fileName_2 + ' -t "," ' + sort_key + ' > ' + fileName_3)		#5_sorted.csv generated
 	print('\n\n\n\t' + '{:,}'.format(i) + ' records processed.')
 
 
