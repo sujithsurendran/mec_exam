@@ -3,7 +3,7 @@ import os
 from os import path
 import json
 import csv
-
+import datetime
 
 def set_fields(tmp_folder, copy_of_source_file):
 	""" 
@@ -140,9 +140,75 @@ def sort_on_date(tmp_folder):
 	os.system('sort ' + fileName_2 + ' -t "," ' + sort_key + ' > ' + fileName_3)		#5_sorted.csv generated
 	print('\n\n\n\t' + '{:,}'.format(i) + ' records processed.')
 
-
-
 def set_record_date(tmp_folder, fileName_1, fileName_2):
+
+
+	fileName_1 = tmp_folder + fileName_1
+	fileName_2 = tmp_folder + fileName_2
+	#fileName_3 = tmp_folder + '/7.csv'
+	timeTable = tmp_folder + '/timeTable.csv'
+	ExamDate = format_exam_date()
+	
+
+	first_time = True
+	with open(fileName_1, "r") as csvFile, open(fileName_2,"w") as tmpFile, open(timeTable,'w') as timeTable:
+		csvReader = csv.DictReader(csvFile)
+
+		writer = csv.DictWriter( tmpFile, fieldnames = ["111Slot","111ExamDate","111Session","111Paper","111AdmYear","111RegNo","111Name"] )
+		#timeTableWriter = csv.DictWriter( timeTable, fieldnames = ["111Slot","111ExamDate","111Session","111Paper"] )
+		
+		writer.writeheader()
+		#timeTableWriter.writeheader()
+	    
+		for row in csvReader:
+			Name = (row["111Name"].strip()).title()
+			RegNo = (row["111RegNo"].upper()).strip()
+			Paper = (row["111Paper"].upper()).strip()
+			Slot = (row["111Slot"].upper()).strip()
+			ExamDate = (row["111ExamDate"]).strip()
+			  
+			AdmYear = row["111AdmYear"]
+			
+			Branch = RegNo.find(AdmYear)
+			
+			Session = row["111Session"]
+
+			if first_time == True:
+			
+				first_time = False
+
+				#tmp_slot = Slot
+				tmp_paper = Paper
+
+
+				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[-" + Slot + "-] -" + ExamDate + "?"))
+
+				ExamSession = input("Enter Exam Session : " + Session + "?")
+
+				ExamDate = format_exam_date(ExamDate)
+
+				#NewExamDate = ExamDate
+				#NewExamSession = ExamSession
+				#by default session is FORENOON otherwise 'a' for AFTERNOON and 'f' for FORENOON
+
+				ExamSession = format_session(ExamSession)
+
+ 
+			if tmp_paper != Paper:	  
+
+				#tmp_slot = Slot
+				ExamDate = str(input("Enter Exam Date for Paper -" + Paper + "[ -" + Slot + "- ]  - " + ExamDate + " - ? "))
+				ExamSession = input("Enter Exam Session " + ExamSession + ':? ')
+
+				ExamDate = format_exam_date(ExamDate)
+				ExamSession = format_session(ExamSession)		
+
+			writer.writerow({'111Slot':Slot, '111ExamDate':ExamDate, '111Session':ExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
+	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
+	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
+
+"""
+def set_record_date_111(tmp_folder, fileName_1, fileName_2):
 
 	fileName_1 = tmp_folder + fileName_1
 	fileName_2 = tmp_folder + fileName_2
@@ -211,7 +277,7 @@ def set_record_date(tmp_folder, fileName_1, fileName_2):
 			writer.writerow({'111Slot':Slot, '111ExamDate':NewExamDate, '111Session':NewExamSession, '111Paper':Paper, '111AdmYear':AdmYear, '111RegNo':RegNo, '111Name':Name})
 	#os.system('uniq -c -w 20 ' + fileName_2 + ' >> ' + tmp_folder + '/timeTable.csv')
 	os.system('uniq -c -w 20 ' + fileName_2 + '|cut -d"," -f1-4|tr "," "-"  >> ' + tmp_folder + '/timeTable.csv')
-
+"""
 
 def change_date(tmp_folder,source_file):
 	timeTable = tmp_folder + '/' + source_file
@@ -237,6 +303,42 @@ def format_session(NewExamSession = "FN"):
 	return NewExamSession
 
 
+
+def format_exam_date(dt=datetime.datetime.now().strftime("%d/%m/%y")):
+
+	print(">>" + dt)
+
+	#   if  dd of dd/mm/yy is entered make complete dd/mm/yyyy
+	if len(str(dt)) == 2 or len(str(dt)) == 1:
+		
+		dt = (f'{int(dt):02}') + datetime.datetime.now().strftime("%d/%m/%y")[-6:]  
+		
+	elif len(str(dt)) == 5:
+
+		# if dd/mm is entered, make complete date dd/mm/yyyy
+		dt = dt + prev_dt[-3:]
+	elif len(str(dt)) > 8:
+		print("Invalid date - dd/mm/yy is the expected date format")
+
+	print(dt)
+	
+	if valid_date_string(dt):
+		return dt
+	else:
+		print("Invalid date")
+		exit()
+
+
+def valid_date_string(dt):
+
+	format = "%d/%m/y"
+	try:
+		datetime.datetime.strptime(dt, format)
+		return True
+	except ValueError:
+		return False
+		
+		
 """
 
 def extract_data_and_name_fields(data):
