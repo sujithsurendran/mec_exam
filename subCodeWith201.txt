@@ -1,4 +1,4 @@
 
 
 
-egrep "[A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq
+egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq

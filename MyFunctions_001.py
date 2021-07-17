@@ -341,8 +341,23 @@ def valid_date_string(dt):
 
 def set date(source_file):
 	tmp_folder + source_file
-	input("Enter Date")
-
+	current_slot = input("Enter Slot: ")
+	current_exam_date = input("Enter Date: ")
+	current_exam_date = format_exam_date(current_exam_date)
+	current_filter = input("Any filter format for Paper(like MAT102 or just 102)? ")
+	current_program = input("Which program BTech-> b, MTech -> m, Both-> x ?")
+	
+	
+	# field 4 = Paper
+	# field 1 = Slot
+	if current_program.upper() == "B":
+		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
+	elif current_program.upper() == "M":
+		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
+	elif current_program.upper() == ".":
+		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
+		
+		
 
 		
 """
