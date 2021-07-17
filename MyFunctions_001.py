@@ -338,6 +338,12 @@ def valid_date_string(dt):
 	except ValueError:
 		return False
 		
+
+def set date(source_file):
+	tmp_folder + source_file
+	input("Enter Date")
+
+
 		
 """
 
