@@ -11,7 +11,7 @@ def calculate_rooms():
 	reminder =  students % room_capacity
 	if reminder == 0 or room_capacity-reminder < 3:
 		rooms = students/room_capacity
-		 
+		return 		 
 	else:
 		room_capacity = room_capacity -1
 		reminder =  students % room_capacity
