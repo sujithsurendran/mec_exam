@@ -304,21 +304,21 @@ def format_session(NewExamSession = "FN"):
 
 
 
-def format_exam_date(dt=datetime.datetime.now().strftime("%d/%m/%y")):
+def format_exam_date(dt=datetime.datetime.now().strftime("%d-%m-%y")):
 
 	print(">>" + dt)
 
-	#   if  dd of dd/mm/yy is entered make complete dd/mm/yyyy
+	#   if  dd of dd-mm-yy is entered make complete dd-mm-yyyy
 	if len(str(dt)) == 2 or len(str(dt)) == 1:
 		
-		dt = (f'{int(dt):02}') + datetime.datetime.now().strftime("%d/%m/%y")[-6:]  
+		dt = (f'{int(dt):02}') + datetime.datetime.now().strftime("%d-%m-%y")[-6:]  
 		
 	elif len(str(dt)) == 5:
 
-		# if dd/mm is entered, make complete date dd/mm/yyyy
+		# if dd/mm is entered, make complete date dd-mm-yyyy
 		dt = dt + prev_dt[-3:]
 	elif len(str(dt)) > 8:
-		print("Invalid date - dd/mm/yy is the expected date format")
+		print("Invalid date - dd-mm-yy is the expected date format")
 
 	print(dt)
 	
@@ -331,7 +331,7 @@ def format_exam_date(dt=datetime.datetime.now().strftime("%d/%m/%y")):
 
 def valid_date_string(dt):
 
-	format = "%d/%m/y"
+	format = "%d-%m-%y"
 	try:
 		datetime.datetime.strptime(dt, format)
 		return True
@@ -339,64 +339,30 @@ def valid_date_string(dt):
 		return False
 		
 
-def set date(source_file):
-	tmp_folder + source_file
-	current_slot = input("Enter Slot: ")
-	current_exam_date = input("Enter Date: ")
+def get_exams_on_a_date(tmp_folder, source_file):
+	source_file = tmp_folder + source_file
+	current_slot = input("Enter Slot(regEx allowed): ")
+	current_exam_date = input("Enter Date:(dd-mm-yy) ")
 	current_exam_date = format_exam_date(current_exam_date)
-	current_filter = input("Any filter format for Paper(like MAT102 or just 102)? ")
-	current_program = input("Which program BTech-> b, MTech -> m, Both-> x ?")
+	input(current_exam_date)
+	current_filter = input("Any filter format for Paper(like MAT102 or just 102 regex) ? ")
 	
 	
 	# field 4 = Paper
 	# field 1 = Slot
-	if current_program.upper() == "B":
-		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
-	elif current_program.upper() == "M":
-		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
-	elif current_program.upper() == ".":
-		os.system('grep "^' + current_slot + '\,"|egrep "\,\ [A-Za-z]{3}201" 5_sorted.csv |cut -d "," -f 4|uniq')
-		
-		
 
-		
-"""
+	os.system('egrep "^' + current_slot + '" ' + source_file + '| cut -d "," -f 4 |egrep "' + current_filter + '"|uniq > ' + current_exam_date + '_papers.csv' )
+	
+	prepare_candidates_for_the_date(current_exam_date, source_file)
 
-def extract_data_and_name_fields(data):
-
+def prepare_candidates_for_the_date(current_exam_date, source_file):
+	os.system("paste -s -d '|' " + current_exam_date + '_papers.csv | tr -d " "> ' + current_exam_date + '_papers.txt')
+	PaperFile = current_exam_date + '_papers.txt'
+	myfile = open(PaperFile, "r")
+	exams = myfile.readline()
+	#os.system('echo "' + current_exam_date + '\n Seating Arrangement" >' + current_exam_date + '.csv')
+	os.system('egrep "' + exams[:-1]  + '" '+ source_file + '>> ' + current_exam_date + '.csv')
 
 
-# -------------- - --------------
-def fetch_fields_and_rename_cols(data):
-    
-	#os.system("sed -i -e '1s: ::g' " + data) #fix the error of left spaces in "     Course" field
-	os.system("sed -i -e '1s: 	Course:Course:g' " + data) #fix the error of left spaces in "     Course" field
 
-	#kkkk=input("This is th eone " + data)
-	with open(data, "r") as csvFile, open("tmp/tmp-001.csv","w") as tmpFile:
-		csvReader = csv.DictReader(csvFile)
-		writer = csv.DictWriter(tmpFile, fieldnames = ["111Name","111RegNo","111Paper","111Slot","111ExamDate","111Session"]) 
-		writer.writeheader()
-	    
-		for row in csvReader:
-			#k = input(row["Course"])
-			Name,RegNo=row["Student"].replace(")","").split("(")
-			Subject,Paper=row["Course"].replace(")","").split("(")
-			Slot = row["Slot"]
-			
-			#ExamDate = row["Exam Date"]
-			ExamDate = "15/04/2021"
-			 
-			#Session = row["Session"]
-			Session = "FN"
-			
-			if(ExamDate.strip() == ""):
-				ExamDate = "xx-xx-xxxx"
-				Session = "xxx"
-			writer.writerow({'111Name':Name,'111RegNo':RegNo,'111Paper':Paper,'111Slot':Slot,'111ExamDate':ExamDate,'111Session':Session})
-			#writer.writerow({'111Name':Name,'111RegNo':RegNo,'111Paper':Paper,'111Slot':Slot})
-		    
-		sort_key = "-k5,5 -k6,6 -k7,7 -k4,4 -k3,3"    #Slot, Date, Session, Paper, RegNo
-		print('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
-		os.system('sort  tmp/tmp-001.csv -t "," ' + sort_key + ' > tmp/tmp-002.csv')
-		"""
+

@@ -64,7 +64,8 @@ if overWrite:
 	set_fields(tmp_folder, copy_of_source_file)
 	sort_on_date(tmp_folder)
 	#set_record_date(tmp_folder, '/5_sorted.csv', '/6.csv')
-	set_date('/5_sorted.csv')
+	get_exams_on_a_date(tmp_folder, '/5_sorted.csv')
+	
 	print("Completed...!")
 	
 else:
