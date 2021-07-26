@@ -4,7 +4,7 @@
 
 
 #def fetch_rooms():
-students = 71
+students = 30
 details=[]
 rooms=[]
 capacities=[]
@@ -31,7 +31,8 @@ for room,capacity,max_capacity,current_capacity in zip(rooms,capacities,max_capa
 		print(str(room) + "=>" + str(capacity) )
 		total = total + int(capacity)
 		if total>=students:
-			print("Total = " + str(total))	
+			print("Students = " + str(students) + "Total = " + str(total) + ", Balance = " + str(students - total))
+			exit()
 		#print(capacity)
 		#print(max_capacity)
 		#print(current_capacity)
