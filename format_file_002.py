@@ -4,10 +4,17 @@
 #def fetch_rooms():
 while True:
 	students = 30
-	students = int(input("Students"))
-	alter = int(input("Alteration?"))
+	students = input("Students")
+	if students == "" or students == "0":
+		exit()
+	else:
+		students = int(students)	
+	
+	alter = input("Alteration?")
 	if alter == "":
 		alter = 0
+	else:
+		alter = int(alter)
 		
 	details=[]
 	rooms=[]
@@ -31,21 +38,18 @@ while True:
 				capacities.append(students)
 				for room1, capacity1 in zip(rooms,capacities):
 					print(room1 + "=>" + str(capacity1))
-
 				exit()
 			else:
-				#print(capacities)
-				#print(rooms)
-				if students>=0:
-					students = students - capacity 
-					capacities.append(capacity)
-					print(students)
-				else:
-					exit()
 
-		
+				students = students - capacity
+				if students>0:
+					capacities.append(capacity)
+
+
+	for room1, capacity1 in zip(rooms,capacities):
+		print(room1 + "=>" + str(capacity1))	
 			
-		
+	
 		
 
 
