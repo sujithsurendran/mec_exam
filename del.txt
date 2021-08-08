@@ -1,0 +1,47 @@
+#format_file
+#from MyFunctions_001 import *
+
+
+def fetch_rooms(students):
+	details=[]
+	rooms=[]
+	capacities=[]
+	max_capacities=[]
+	current_capacities=[]
+	i=1
+	total=0
+
+
+	with open("./rooms.csv") as file1, open("rooms-001.csv","w") as tmpFile:
+		for line in file1:
+			line_i = line.rstrip()
+			details = line_i.split(",")
+			rooms.append(details[0])
+			capacities.append(details[1])
+			max_capacities.append(details[2])
+			current_capacities.append(details[3])
+			total = total + int(details[1]) 
+			if total >= students:
+				#print(details[0] + "=>" + str(students - int(details[1])) )		
+				print(details[0] + "=>" + str(total - students) )		
+				print("Students = " + str(students) + ", Total = " + str(total) + ", Balance = " + str(students - total))
+				return True
+			else:
+				print(details[0] + "=>" + details[1] )		
+				total = total + int(details[1]) 
+
+while True:
+	students = int(input("Students?"))
+	fetch_rooms(students)
+
+
+"""i=0
+for room,capacity,max_capacity,current_capacity in zip(rooms,capacities,max_capacities,current_capacities):
+
+		print(str(room) + "=>" + str(capacity) )
+		total = total + int(capacity)
+
+"""
+		
+		
+		
