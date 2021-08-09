@@ -23,6 +23,9 @@ def fetch_rooms(students=0):
 	else:
 		alter = int(alter)
 		
+	
+
+
 	details=[]
 	rooms=[]
 	capacities=[]
@@ -30,23 +33,24 @@ def fetch_rooms(students=0):
 	current_capacities=[]
 
 	total = 0
+	
 	with open("./rooms.txt") as file1:
 		
 		for line in file1:
 			line_i = line.rstrip()
 			details = line_i.split(",")
 			rooms.append(details[0])
-			
 			max_capacities.append(details[2])
 			current_capacities.append(details[3])
 
 			capacity = int(details[3]) + alter
+
 			if capacity >= students:
 				capacities.append(students)
 				return capacities,rooms
 				#for room1, capacity1 in zip(rooms,capacities):
 				#	print(room1 + "=>" + str(capacity1))
-				#exit()
+				exit()
 			else:
 
 				students = students - capacity
