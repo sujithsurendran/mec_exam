@@ -130,17 +130,30 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 			pdf.cell(30, 10, row["Paper"].lstrip() , 1,1)
 			i=i+1
 			#summary[str(room) + row["Paper"].lstrip()] = str(room) + row["Paper"].lstrip()
-			summary.append(str(room) + row["Paper"].lstrip())
-			counter[str(room) + "-" + row["Paper"].lstrip()] = str(room) + "-" + row["Paper"].lstrip()
+			summary.append(str(room) + "^" + row["Paper"].lstrip())
+			#counter[str(room) + "-" + row["Paper"].lstrip()] = str(room) + "-" + row["Paper"].lstrip()
 			
 	pdf.output(source_file + '.pdf', 'F')
-	"""print(Counter(summary))
-	for item in Counter(summary):
-		print(item,summary[item])"""
-	#s1=list(Counter(summary))
-	
-	for item in counter:
-		print(item,counter[item])
+	#print(Counter(summary))
+	c1=Counter(summary)
+	a=b=c=[]
+	i=1
+	for item in c1:
+		room,paper = item.split('^')
+		count = c1[item]
+		#print(room,paper,count)
+		#print(item.split('^'),c1[item])
+		a[i] = room
+		b[i] = paper
+		c[i] = count
+		i = i + 1
+
+	print(a)
+	print(b)
+	print(c)
+		
+		
+
 
 
 
