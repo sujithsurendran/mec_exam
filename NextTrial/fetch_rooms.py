@@ -2,6 +2,7 @@ import os
 import csv
 from fpdf import FPDF
 from collections import Counter
+from collections import defaultdict
 
 def input_papers(source_file):
 	paper="XXX"
@@ -133,27 +134,56 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 			summary.append(str(room) + "^" + row["Paper"].lstrip())
 			#counter[str(room) + "-" + row["Paper"].lstrip()] = str(room) + "-" + row["Paper"].lstrip()
 			
+		
+			
+			
+			
+			
 	pdf.output(source_file + '.pdf', 'F')
 	#print(Counter(summary))
 	c1=Counter(summary)
-	a=b=c=[]
+	room_row=paper_col=c=[]
 	i=1
+	
+"""	
+	room_list=[]
+	paper_list=[]
+	data_list=[]
+	data_cell=defaultdict(dict)
 	for item in c1:
 		room,paper = item.split('^')
 		count = c1[item]
 		#print(room,paper,count)
 		#print(item.split('^'),c1[item])
-		a[i] = room
-		b[i] = paper
-		c[i] = count
-		i = i + 1
+		#room_row.append(room)
+		#paper_col.append(paper)
 
-	print(a)
-	print(b)
-	print(c)
+		data_cell[room][paper]=count
 		
+		room_list.append(room)
+		paper_list.append(paper)
+		data_list.append(count)
+		"""
 		
-
-
-
+with open(source_file + '.csv') as file2:
+	table = defaultdict(dict)
+	csvReader = csv.DictReader(file2)
+	first_time = True
+	
+	i=j=1
+	
+	for row in csvReader:
+		
+		if first_time:
+			table[1][2] =  row["Room"]
+			table[2][1] = row["Paper"]
+			first_time = False
+			count = 0	
+			while table[1][2] =  row["Room"]:
+				while table[2][1] == row["Paper"]
+					count=count+1
+					table[
+			
+		
+	
 
