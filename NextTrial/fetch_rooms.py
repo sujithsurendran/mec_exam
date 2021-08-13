@@ -76,6 +76,7 @@ capacities,rooms = fetch_rooms(students)
 
 summary=[]
 counter={}
+r_i = 1
 with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 	pdf = FPDF('P', 'mm', 'A4')
 	
@@ -86,14 +87,7 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 	
 	for room,capacity in zip(rooms,capacities):
 		
-		#writer.writerow({
-		#'Room':"Room: " + room,
-		#'Seat':"",
-		#'Student':"",
-		#'RegNo':"",
-		#'Slot':"",
-		#'Paper':"",
-		#})					
+				
 		i=1
 		pdf.add_page()
 		pdf.set_font('Times', '', 20)
@@ -109,6 +103,12 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 		pdf.cell(30, 10, "Paper" , 1,1)
 		
 		pdf.set_font('Times', '', 16)
+		
+		
+		records = defaultdict(dict)
+		
+		
+		
 		for i,row in zip(range(1,capacity+1),csvReader):
 			
 				
@@ -129,6 +129,12 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 			pdf.cell(50, 10, row["RegNo"] , 1,0)
 			pdf.cell(12, 10, row["Slot"] , 1,0)
 			pdf.cell(30, 10, row["Paper"].lstrip() , 1,1)
+
+
+			records[r_i][1] = room	
+			records[r_i][2] = row["paper"]	
+			r_i = r_i +1
+
 			i=i+1
 			#summary[str(room) + row["Paper"].lstrip()] = str(room) + row["Paper"].lstrip()
 			summary.append(str(room) + "^" + row["Paper"].lstrip())
@@ -164,26 +170,36 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 		paper_list.append(paper)
 		data_list.append(count)
 		"""
+
+
+
+table = defaultdict(dict)
+r=c=1
+i=1
+
+while i<r_i:
+	table[r][c+1] =  records[i][1]	
+	table[r+1][c] = records[i][2]
+
+	while table[r][c+1] ==  records[i][1]:
+
+		#table[r][c+1] =  records[i][1]	
+		table[r+1][c] = records[i][2]
+
+		paper_count = 0
+		while table[r+1][c] == records[i][2]:	
+			i=i+1		
+			paper_count= paper_count + 1
 		
-with open(source_file + '.csv') as file2:
-	table = defaultdict(dict)
-	csvReader = csv.DictReader(file2)
-	first_time = True
-	
-	i=j=1
-	
-	for row in csvReader:
+		r=r+1
+		table[r+1][c+1] = paper_count
+	c=c+1
 		
-		if first_time:
-			table[1][2] =  row["Room"]
-			table[2][1] = row["Paper"]
-			first_time = False
-			count = 0	
-			while table[1][2] =  row["Room"]:
-				while table[2][1] == row["Paper"]
-					count=count+1
-					table[
 			
+for p in range(r):
+	for q in range(c):
+		print(table[p][q],"\t", end="")
+	print("")
 		
 	
 
