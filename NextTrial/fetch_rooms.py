@@ -3,6 +3,7 @@ import csv
 from fpdf import FPDF
 from collections import Counter
 from collections import defaultdict
+from array import *
 
 def input_papers(source_file):
 	paper="XXX"
@@ -76,19 +77,24 @@ capacities,rooms = fetch_rooms(students)
 
 summary=[]
 counter={}
-r_i = 1
+r_i = 0
+records = defaultdict(dict)
 with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 	pdf = FPDF('P', 'mm', 'A4')
 	
 	csvReader = csv.DictReader(file2)
 
-	writer = csv.DictWriter(file1, fieldnames = ["Room","Seat","Student","RegNo","Slot","Paper"])
+	writer = csv.DictWriter(file1, fieldnames = ["No","Room","Seat","Student","RegNo","Slot","Paper"])
 	writer.writeheader()
-	
+
+	room_list=[]
+	paper_list=[]	
+	room_index=0
 	for room,capacity in zip(rooms,capacities):
 		
 				
 		i=1
+		room_index=room_index+1
 		pdf.add_page()
 		pdf.set_font('Times', '', 20)
 		pdf.cell(0, 10, 'Seating Arrangement - ' + source_file, 0,1,'R')
@@ -105,51 +111,97 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 		pdf.set_font('Times', '', 16)
 		
 		
-		records = defaultdict(dict)
 		
 		
+
 		
 		for i,row in zip(range(1,capacity+1),csvReader):
+		
+			"""for rx in ('401','515','511'):
+				if room == rx and row["RegNo"].strip() == 'MDL18CS066':
+					
+					input("LijoZechariahJames cannot sit in " + rx)
+					exit()"""	
 			
+			studentName = row["Student"]
+			
+			if row["RegNo"].strip() in ('MDL18CS066', 'MUT18ME028'):
+				studentName = " * " + studentName	
 				
+				
+								
 			writer.writerow({
+			'No':room_index,
 			'Room':room,
 			'Seat':"A" + str(i).zfill(2),
-			'Student':row["Student"],
+			'Student':studentName,
 			'RegNo':row["RegNo"],
 			'Slot':row["Slot"],
-			'Paper':row["Paper"],
-			})	
-			
-			#str_row = str(i).zfill(2) + row["Student"][0:20] +  row["RegNo"][0:15] + row["Slot"][0:2] + row["Paper"]
-			#pdf.cell(0, 10, str_row, 1,1)
+			'Paper':row["Paper"],})			
+
+
+			"""if row["RegNo"].strip() == 'MUT18ME028':
+				if i != 1 and room != rooms[1]:
+					input("Gokul Mohan has to be put in First Room")
+					exit()"""
+
+			studentName = studentName[0:25].title().replace(" ", "")
 			
 			pdf.cell(12, 10, "A" + str(i).zfill(2) , 1,0)
-			pdf.cell(70, 10, row["Student"][0:25].title().replace(" ", "") , 1,0)
+			pdf.cell(70, 10, studentName , 1,0)
 			pdf.cell(50, 10, row["RegNo"] , 1,0)
 			pdf.cell(12, 10, row["Slot"] , 1,0)
 			pdf.cell(30, 10, row["Paper"].lstrip() , 1,1)
 
 
-			records[r_i][1] = room	
-			records[r_i][2] = row["paper"]	
-			r_i = r_i +1
+
 
 			i=i+1
 			#summary[str(room) + row["Paper"].lstrip()] = str(room) + row["Paper"].lstrip()
 			summary.append(str(room) + "^" + row["Paper"].lstrip())
 			#counter[str(room) + "-" + row["Paper"].lstrip()] = str(room) + "-" + row["Paper"].lstrip()
-			
-		
-			
-			
-			
+			room_list.append(room)
+			paper_list.append(row["Paper"])	
+
+	
+	rm = Counter(room_list)
+	uniq_rooms=[]
+	for rm_i in rm:
+		uniq_rooms.append(rm_i)
+
+
+	pp = Counter(paper_list)
+	uniq_papers=[]
+	for pp_i in pp:
+		uniq_papers.append(pp_i)
+
+
+
 			
 	pdf.output(source_file + '.pdf', 'F')
 	#print(Counter(summary))
 	c1=Counter(summary)
-	room_row=paper_col=c=[]
-	i=1
+	
+	table=[]
+	table.append(uniq_rooms)
+	#print(room_list)
+	for i in uniq_rooms:
+		#print(i,end="")
+		row=[uniq_papers[0]]
+		for j in uniq_papers:
+			paper_count = c1[str(i)+"^"+str(j)]
+			if(paper_count != 0):
+				row.append(paper_count)    
+			else:
+				row.append("-")
+		row.insert(0,j)
+		table.append(row)
+			
+	for elem in table:
+		print(elem)
+	
+
+		
 	
 """	
 	room_list=[]
@@ -173,33 +225,5 @@ with open("./aaa.csv","w") as file1, open(source_file + '.csv') as file2:
 
 
 
-table = defaultdict(dict)
-r=c=1
-i=1
-
-while i<r_i:
-	table[r][c+1] =  records[i][1]	
-	table[r+1][c] = records[i][2]
-
-	while table[r][c+1] ==  records[i][1]:
-
-		#table[r][c+1] =  records[i][1]	
-		table[r+1][c] = records[i][2]
-
-		paper_count = 0
-		while table[r+1][c] == records[i][2]:	
-			i=i+1		
-			paper_count= paper_count + 1
-		
-		r=r+1
-		table[r+1][c+1] = paper_count
-	c=c+1
-		
-			
-for p in range(r):
-	for q in range(c):
-		print(table[p][q],"\t", end="")
-	print("")
-		
 	
 
